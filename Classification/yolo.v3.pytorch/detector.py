@@ -23,6 +23,7 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
     # Set up model
     model = Darknet(config_path, img_size=img_size)
     model.load_weights(weights_path)
+    preds = list()
 
     if cuda:
         model.cuda()
@@ -49,8 +50,8 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
         # Save image and detections
         imgs.extend(img_paths)
         img_detections.extend(detections)
+        break
 
-    print('\nSaving images:')
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
         print("(%d) Image: '%s'" % (img_i, path))
 
@@ -69,7 +70,7 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
             cnt = 0
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 print('\t+ Label: %s, Conf: %.5f' % (classes[int(cls_pred)], cls_conf.item()))
-
+                img_info = {"index":cnt, "label":classes[int(cls_pred)]}
                 # Rescale coordinates to original dimensions
                 box_h = ((y2 - y1) / unpad_h) * img_np.shape[0]
                 box_w = ((x2 - x1) / unpad_w) * img_np.shape[1]
@@ -78,8 +79,12 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
 
                 c_area = (x1.item(), y1.item(), x1.item() + box_w.item(), y1.item() + box_h.item())
                 cropped_img = img.crop(c_area)
-                cropped_img.save('output/%d.%d_%s.png' % (img_i, cnt, classes[int(cls_pred)]))
+                cropped_img.save('output/%d_%s.png' % (img_info['index'], img_info['label']))
                 cnt += 1
+                preds.append(img_info)
+        break
+    return preds
+
 
 if __name__ == "__main__":
     detect_object()
