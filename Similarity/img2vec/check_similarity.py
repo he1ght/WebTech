@@ -38,5 +38,5 @@ def img_sim(input_path, target_list, threshold=0.7):
 
 if __name__ == "__main__":
     result = img_sim(input_path="./example/test/sim_test1.JPG",
-                     target_list=["./example/test/sim_test2.jpg", "./example/test/sim_test3.jpeg"])
+                     target_list=["./example/test/sim_test1.JPG", "./example/test/sim_test2.jpg", "./example/test/sim_test3.jpeg"])
     print(result)

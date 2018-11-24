@@ -78,7 +78,7 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
 
                 c_area = (x1.item(), y1.item(), x1.item() + box_w.item(), y1.item() + box_h.item())
                 cropped_img = img.crop(c_area)
-                cropped_img.save('%s/%d.png' % (output, img_info['index']))
+                cropped_img.save('%s/%d.jpg' % (output, img_info['index']))
                 cnt += 1
                 preds.append(img_info)
         break

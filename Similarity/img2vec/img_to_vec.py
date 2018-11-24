@@ -33,7 +33,9 @@ class Img2Vec():
         :param tensor: If True, get_vec will return a FloatTensor instead of Numpy array
         :returns: Numpy ndarray
         """
+        print(self.to_tensor(self.resize(img)).size())
         image = self.normalize(self.to_tensor(self.resize(img))).unsqueeze(0).to(self.device)
+        print(image.size())
 
         my_embedding = torch.zeros(1, self.layer_output_size, 1, 1)
 
