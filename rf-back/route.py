@@ -5,6 +5,10 @@ import xml.etree.ElementTree as ET
 from flask_cors import CORS
 from flask import Flask, render_template, request, Response, redirect
 
+sys.path.insert(0, "../Classification/yolo.v3.pytorch/")
+import detector
+sys.path.insert(0, '../Similarity/img2vec/')
+import check_similarity
 
 app = Flask(__name__)
 CORS(app)
@@ -64,8 +68,8 @@ def test():
         root = doc.getroot()
         for a in root.iter('image'):
             lists.append(a.text)
-        print(lists)    
-        
+        print(lists)
+
 
 
         print('--------------')
@@ -75,7 +79,7 @@ def test():
 #기본 메인 url
 @app.route('/')
 def hello_world():
-    test()
+    # test()
     return render_template('index.html')
 
 #예산, 이미지 제출 post
@@ -86,20 +90,28 @@ def upload_file():
     # extension = file.filename.rsplit('.', 1)[1].lower()
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
-    
+    print("ready to detect")
+    info = detector.detect_object(image_folder="uploads/", output="static/output",
+                                   config_path="../Classification/yolo.v3.pytorch/config/yolov3.cfg",
+                                   weights_path="../Classification/yolo.v3.pytorch/weights/yolov3.weights",
+                                   class_path="../Classification/yolo.v3.pytorch/data/coco.names")
+    print(info)
     #classification 함수 사용! 해서 output폴더로 해서 나오고 dictionary 받음
-    
-    info = [
-        {"index" : 0, "label" : "fork"}, 
-        {"index" : 1, "label" : "fork"}, 
-        {"index" : 2, "label" : "vase"}, 
-        {"index" : 3, "label" : "diningtable"}, 
-        {"index" : 4, "label" : "chair"}, 
-    ]
+
     for i in info:
         suc = naverSearch(i['label'], i["index"])
         if suc == 0:
             print('success')
+        else:
+            print("Error handling")
+
+    for i in info:
+        lists = []
+        doc = ET.parse(f"static/products{i['index']}.xml")
+        root = doc.getroot()
+        for a in root.iter('image'):
+            lists.append(a.text)
+        # check_similarity.img_sim()
             
     # idx = 0
     # url = f'http://175.193.43.115:10000/static/output/{idx}.png'
