@@ -12,6 +12,9 @@ from torch.utils.data import DataLoader
 from utils.datasets import *
 from utils.utils import *
 
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib.ticker import NullLocator
 
 def detect_object(image_folder="data/samples", output="output", use_gpu=True, config_path="config/yolov3.cfg",
                   weights_path="weights/yolov3.weights", class_path="data/coco.names", conf_thres=0.8, nms_thres=0.4,
@@ -39,6 +42,8 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
+    cmap = plt.get_cmap('tab20b')
+    colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
         # Configure input
@@ -58,6 +63,10 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
         img = Image.open(path)
         img_np = np.array(img)
 
+        plt.figure()
+        fig, ax = plt.subplots(1)
+        ax.imshow(img_np)
+
         pad_x = max(img_np.shape[0] - img_np.shape[1], 0) * (img_size / max(img_np.shape))
         pad_y = max(img_np.shape[1] - img_np.shape[0], 0) * (img_size / max(img_np.shape))
 
@@ -67,6 +76,7 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
         if detections is not None:
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
+            bbox_colors = random.sample(colors, n_cls_preds)
             cnt = 0
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 print('\t+ Label: %s, Conf: %.5f' % (classes[int(cls_pred)], cls_conf.item()))
@@ -77,11 +87,26 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
                 y1 = ((y1 - pad_y // 2) / unpad_h) * img_np.shape[0]
                 x1 = ((x1 - pad_x // 2) / unpad_w) * img_np.shape[1]
 
+                color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
+                # Create a Rectangle patch
+                bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2,
+                                         edgecolor=color,
+                                         facecolor='none')
+                ax.add_patch(bbox)
+                plt.text(x1, y1, s=classes[int(cls_pred)], color='white', verticalalignment='top',
+                         bbox={'color': color, 'pad': 0})
+
                 c_area = (x1.item(), y1.item(), x1.item() + box_w.item(), y1.item() + box_h.item())
                 cropped_img = img.crop(c_area)
-                cropped_img.save('output/%d.png' % (img_info['index']))
+                cropped_img.save('%s/%d.png' % (output, img_info['index']))
                 cnt += 1
                 preds.append(img_info)
+
+        plt.axis('off')
+        plt.gca().xaxis.set_major_locator(NullLocator())
+        plt.gca().yaxis.set_major_locator(NullLocator())
+        plt.savefig('%s/total.png' % (output), bbox_inches='tight', pad_inches=0.0)
+        plt.close()
         break
     return preds
 
