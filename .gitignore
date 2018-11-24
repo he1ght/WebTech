@@ -1,2 +1,6 @@
 *.weights
 ./Classification/yolo.v3.pytorch/data/coco
+.idea
+*.xml
+*.png
+*.jpg
