@@ -24,7 +24,7 @@ def hello_world():
     return render_template('index.html')
 
 def detect_from_image():
-    detector.detect_object(image_folder="uploads", config_path="../Classification/yolo.v3.pytorch/config/yolov3.cfg",
+    return detector.detect_object(image_folder="uploads", config_path="../Classification/yolo.v3.pytorch/config/yolov3.cfg",
                            weights_path="../Classification/yolo.v3.pytorch/weights/yolov3.weights",
                            class_path="../Classification/yolo.v3.pytorch/data/coco.names")
 
@@ -37,7 +37,8 @@ def upload_file():
     # extension = file.filename.rsplit('.', 1)[1].lower()
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
-    detect_from_image()
+    info = detect_from_image()
+    print(info)
     return render_template('index.html')
 
 
