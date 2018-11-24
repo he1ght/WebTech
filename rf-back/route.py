@@ -5,9 +5,12 @@ import xml.etree.ElementTree as ET
 from flask_cors import CORS
 from flask import Flask, render_template, request, Response, redirect
 
-
 app = Flask(__name__)
 CORS(app)
+
+sys.path.insert(0, '../Classification/yolo.v3.pytorch/')
+import detector
+
 
 UPLOAD_FOLDER = os.path.basename('uploads')
 BUDGET = 0
@@ -20,6 +23,12 @@ fileChanged = 0 # for observe file change
 def hello_world():
     return render_template('index.html')
 
+def detect_from_image():
+    detector.detect_object(image_folder="uploads", config_path="../Classification/yolo.v3.pytorch/config/yolov3.cfg",
+                           weights_path="../Classification/yolo.v3.pytorch/weights/yolov3.weights",
+                           class_path="../Classification/yolo.v3.pytorch/data/coco.names")
+
+
 #예산, 이미지 제출 post
 @app.route('/', methods=['POST'])
 def upload_file():
@@ -28,6 +37,7 @@ def upload_file():
     # extension = file.filename.rsplit('.', 1)[1].lower()
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
+    detect_from_image()
     return render_template('index.html')
 
 
