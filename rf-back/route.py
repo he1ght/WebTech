@@ -12,6 +12,7 @@ CORS(app)
 UPLOAD_FOLDER = os.path.basename('uploads')
 BUDGET = 0
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+fileChanged = 0 # for observe file change
 
 
 #기본 메인 url
@@ -24,17 +25,20 @@ def hello_world():
 def upload_file():
     file = request.files['image']    
     # 확장자 명 추출
-    extension = file.filename.rsplit('.', 1)[1].lower()
-    f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.'+extension)    
-    
+    # extension = file.filename.rsplit('.', 1)[1].lower()
+    f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
     return render_template('index.html')
+
+
+
 
 # naver api 예시로 사용
 @app.route("/apiTest")
 def apiTest() :
    return render_template('naver.html')
     
+
 # naver api post, xml 파일 만들어주자
 @app.route('/apiTest', methods=['POST'])
 def apiTestPost() : 
@@ -61,7 +65,7 @@ def apiTestPost() :
       xmlData = Response(response_body.decode('utf-8'), mimetype='text/xml')
       tree = ET.XML(response_body.decode('utf-8'))
       
-      with open("static/test.xml", "wb") as f:
+      with open("static/products.xml", "wb") as f:
         f.write(ET.tostring(tree))
 
       return redirect('/', code=302) 
