@@ -11,9 +11,11 @@ import requests
 def img_sim(input_path, target_list, threshold=0.7, use_gpu=True):
     img2vec = Img2Vec(model='resnet-101', cuda=use_gpu)
     try:
-        key_vec = img2vec.get_vec(Image.open(input_path).convert("RGB"))
+        key_img = Image.open(input_path)
     except OSError:
-        key_vec = img2vec.get_vec(Image.open(requests.get(input_path, stream=True).raw).convert("RGB"))
+        key_img = Image.open(requests.get(input_path, stream=True).raw)
+    key_img = key_img.convert("RGB")
+    key_vec = img2vec.get_vec(key_img)
     pics = {}
     for file in target_list:
         # filename = os.fsdecode(file)
