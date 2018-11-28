@@ -13,3 +13,7 @@ def detectObj():
 
 def img2vec(input_path, target_list, threshold=0.7):
     return check_similarity.img_sim(input_path, target_list, threshold=threshold)
+
+def autoRecommend(result):
+    # todo return 값 reuslt ['is_check'] true/false 추가
+    pass
