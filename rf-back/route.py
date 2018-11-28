@@ -84,22 +84,12 @@ def upload_file():
             q["title"] = title.text
             lists.append(q)
                     
-        
-        #print('--------------------------------------')
-
         # image similarity check start
-        sresult = img2vec(f'./output/{i["index"]}.jpg',lists, 0.7)  #list안에 dic img : 이미지 주소랑 result : true/false        
+        sresult = img2vec(f'./static/output/{i["index"]}.jpg',lists, 0.7)  #list안에 dic img : 이미지 주소랑 result : true/false        
         result.append({'sresult': sresult, 'idx': i['index'], 'label':i['label'], 'is_check':True})
-        #print(sresult)
+        
 
     print(result)    
-
-        #여기서 similarity 검사        
-
-
-
-
-
     return render_template('index.html')
 
 
