@@ -11,5 +11,5 @@ def detectObj():
                            weights_path="../Classification/weights/yolov3.weights",
                            class_path="../Classification/data/coco.names")
 
-def img2vec(input_path, target_list):
-    return check_similarity.img_sim(input_path, target_list)
+def img2vec(input_path, target_list, threshold=0.7):
+    return check_similarity.img_sim(input_path, target_list, threshold=threshold)
