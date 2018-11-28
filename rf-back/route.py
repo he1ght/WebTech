@@ -5,6 +5,11 @@ import xml.etree.ElementTree as ET
 from flask_cors import CORS
 from flask import Flask, render_template, request, Response, redirect
 
+try:
+    from ai_funcs import detectObj, img2vec
+except ImportError:
+    from sample import detectObj, img2vec
+
 
 app = Flask(__name__)
 CORS(app)
@@ -40,21 +45,30 @@ def naverSearch(term, index):
       print("Error Code:" + rescode)    
       return 1
 
-def test():    
-    info = [
-        {"index" : 0, "label" : "fork"}, 
-        {"index" : 1, "label" : "fork"}, 
-        {"index" : 2, "label" : "vase"}, 
-        {"index" : 3, "label" : "diningtable"}, 
-        {"index" : 4, "label" : "chair"}, 
-    ]
 
+
+#기본 메인 url
+@app.route('/')
+def hello_world():
+    return render_template('index.html')
+
+
+#예산, 이미지 제출 post
+@app.route('/', methods=['POST'])
+def upload_file():
+    print(1)
+    file = request.files['image']        
+    f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
+    file.save(f)
+    print(2)
+    # import 설정으로 info 사용(협업->딥러닝, 개인-> 샘플 info)
+    info = detectObj()
     lists = []
 
     for i in info:
         suc = naverSearch(i['label'], i["index"])
         if suc == 0:
-            print('success')
+            print(f'products{i["index"]}.xml made successfully!')
         else : print("Error handling")
                       
     
@@ -64,45 +78,19 @@ def test():
         root = doc.getroot()
         for a in root.iter('image'):
             lists.append(a.text)
-        print(lists)    
+        print(lists)     
+        
+        sresult = img2vec(f'/output/{i["index"]}.jpg',lists)  #list안에 dic img : 이미지 주소랑 result : true/false
+        print(sresult)
+
         
 
-
-        print('--------------')
-
+        #여기서 similarity 검사        
 
 
-#기본 메인 url
-@app.route('/')
-def hello_world():
-    test()
-    return render_template('index.html')
 
-#예산, 이미지 제출 post
-@app.route('/', methods=['POST'])
-def upload_file():
-    file = request.files['image']    
-    # 확장자 명 추출
-    # extension = file.filename.rsplit('.', 1)[1].lower()
-    f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
-    file.save(f)
-    
-    #classification 함수 사용! 해서 output폴더로 해서 나오고 dictionary 받음
-    
-    info = [
-        {"index" : 0, "label" : "fork"}, 
-        {"index" : 1, "label" : "fork"}, 
-        {"index" : 2, "label" : "vase"}, 
-        {"index" : 3, "label" : "diningtable"}, 
-        {"index" : 4, "label" : "chair"}, 
-    ]
-    for i in info:
-        suc = naverSearch(i['label'], i["index"])
-        if suc == 0:
-            print('success')
-            
-    # idx = 0
-    # url = f'http://175.193.43.115:10000/static/output/{idx}.png'
+
+
     return render_template('index.html')
 
 
