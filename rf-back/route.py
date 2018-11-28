@@ -5,9 +5,9 @@ import xml.etree.ElementTree as ET
 from flask_cors import CORS
 from flask import Flask, render_template, request, Response, redirect
 
-sys.path.insert(0, "../Classification/yolo.v3.pytorch/")
+sys.path.insert(0, "../Classification/")
 import detector
-sys.path.insert(0, '../Similarity/img2vec/')
+sys.path.insert(0, '../Similarity/')
 import check_similarity
 
 app = Flask(__name__)
@@ -92,9 +92,9 @@ def upload_file():
     file.save(f)
     print("ready to detect")
     info = detector.detect_object(image_folder="uploads/", output="static/output",
-                                   config_path="../Classification/yolo.v3.pytorch/config/yolov3.cfg",
-                                   weights_path="../Classification/yolo.v3.pytorch/weights/yolov3.weights",
-                                   class_path="../Classification/yolo.v3.pytorch/data/coco.names")
+                                   config_path="../Classification/config/yolov3.cfg",
+                                   weights_path="../Classification/weights/yolov3.weights",
+                                   class_path="../Classification/data/coco.names")
     print(info)
     #classification 함수 사용! 해서 output폴더로 해서 나오고 dictionary 받음
 
