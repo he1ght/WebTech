@@ -56,11 +56,10 @@ def hello_world():
 #예산, 이미지 제출 post
 @app.route('/', methods=['POST'])
 def upload_file():
-    print(1)
     file = request.files['image']        
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
-    print(2)
+    
     # import 설정으로 info 사용(협업->딥러닝, 개인-> 샘플 info)
     info = detectObj()
     lists = []
@@ -80,7 +79,10 @@ def upload_file():
             lists.append(a.text)
         print(lists)     
         
-        sresult = img2vec(f'/output/{i["index"]}.jpg',lists)  #list안에 dic img : 이미지 주소랑 result : true/false
+        print('--------------------------------------')
+
+        # image similarity check start
+        sresult = img2vec(f'./output/{i["index"]}.jpg',lists, 0.7)  #list안에 dic img : 이미지 주소랑 result : true/false        
         print(sresult)
 
         
