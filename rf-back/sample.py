@@ -12,7 +12,7 @@ def detectObj() :
 
 def img2vec(path, list, a=0.7):
   a = [
-    {"img" : "https://shopping-phinf.pstatic.net/main_8046667/80466670839.1.jpg", "result" : True} for _ in range(100)
+    {"img" : "https://shopping-phinf.pstatic.net/main_8046667/80466670839.1.jpg", "result" : True, "hp" : "10000","lp":"5000"} for _ in range(100)
   ]
   
   return a;

@@ -70,25 +70,29 @@ def upload_file():
         else : print("Error handling")
                       
     # i["lavel"] = fork
+    result = []
     for i in info:
         lists = []
         doc = ET.parse(f"static/products{i['index']}.xml")
         root = doc.getroot()
-        for a,b,c in zip(root.iter('image'),root.iter('lprice'),root.iter('hprice')):            
+        for img,lp,hp,link,title  in zip(root.iter('image'),root.iter('lprice'),root.iter('hprice'),root.iter('link'), root.iter('title')):            
             q = {}
-            q["img"] = a.text
-            q["lp"] = b.text
-            q["hp"] = c.text       
+            q["img"] = img.text
+            q["lp"] = lp.text
+            q["hp"] = hp.text     
+            q["link"] = link.text       
+            q["title"] = title.text
             lists.append(q)
-        print(lists)     
+                    
         
-        print('--------------------------------------')
+        #print('--------------------------------------')
 
         # image similarity check start
         sresult = img2vec(f'./output/{i["index"]}.jpg',lists, 0.7)  #list안에 dic img : 이미지 주소랑 result : true/false        
-        print(sresult)
+        result.append({'sresult': sresult, 'idx': i['index'], 'label':i['label'], 'is_check':True})
+        #print(sresult)
 
-        
+    print(result)    
 
         #여기서 similarity 검사        
 
