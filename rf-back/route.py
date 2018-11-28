@@ -22,7 +22,6 @@ fileChanged = 0 # for observe file change
 client_id = "nFWOo7gr6A0C4umAP_Ln"
 client_secret = "7UwjXua3oQ"
 
-
 def naverSearch(term, index):  
   encText = urllib.parse.quote(term)
   url = "https://openapi.naver.com/v1/search/shop.xml?display=10&query=" + encText
@@ -70,13 +69,17 @@ def upload_file():
             print(f'products{i["index"]}.xml made successfully!')
         else : print("Error handling")
                       
-    
+    # i["lavel"] = fork
     for i in info:
         lists = []
         doc = ET.parse(f"static/products{i['index']}.xml")
         root = doc.getroot()
-        for a in root.iter('image'):
-            lists.append(a.text)
+        for a,b,c in zip(root.iter('image'),root.iter('lprice'),root.iter('hprice')):            
+            q = {}
+            q["img"] = a.text
+            q["lp"] = b.text
+            q["hp"] = c.text       
+            lists.append(q)
         print(lists)     
         
         print('--------------------------------------')
