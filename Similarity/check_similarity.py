@@ -8,7 +8,7 @@ import torch
 import requests
 
 
-def img_sim(input_path, target_list, threshold=0.7, use_gpu=True):
+def img_sim(input_path, target_list, threshold=0.7, use_gpu=True, prune=True):
     img2vec = Img2Vec(model='resnet-101', cuda=use_gpu)
     try:
         key_img = Image.open(input_path)
@@ -35,6 +35,8 @@ def img_sim(input_path, target_list, threshold=0.7, use_gpu=True):
         d_view = [(v, k) for k, v in sims.items()]
         # d_view.sort(reverse=True)
         for (v, k), file in zip(d_view, target_list):
+            if prune and not v >= threshold:
+                continue
             # print("{:10s} : {} [{}]".format(k, 'O' if v >= threshold else 'X', v))
             assert k == file['img']
             result.append({'img': k,
