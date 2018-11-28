@@ -4,5 +4,7 @@
 *.xml
 *.png
 *.jpg
+*.JPG
+*.jpeg
 *.pyc
-*/__pycache__/
+*/__pycache__
