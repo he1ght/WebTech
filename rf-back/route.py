@@ -3,12 +3,12 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 from flask_cors import CORS
-from flask import Flask, render_template, request, Response, redirect
+from flask import Flask, render_template, request, Response, redirect, jsonify
 
 try:
-    from ai_funcs import detectObj, img2vec
+    from ai_funcs import detectObj, img2vec, autoRecommend
 except ImportError:
-    from sample import detectObj, img2vec
+    from sample import detectObj, img2vec, autoRecommend
 
 
 app = Flask(__name__)
@@ -85,12 +85,13 @@ def upload_file():
             lists.append(q)
                     
         # image similarity check start
-        sresult = img2vec(f'./static/output/{i["index"]}.jpg',lists, 0.7)  #list안에 dic img : 이미지 주소랑 result : true/false        
-        result.append({'sresult': sresult, 'idx': i['index'], 'label':i['label'], 'is_check':True})
-        
+        sresult = img2vec(f'./static/output/{i["index"]}.jpg',lists, 0.6)  #list안에 dic img : 이미지 주소랑 result : true/false        
+        result.append({'sresult': sresult, 'idx': i['index'], 'label':i['label'] }) #여기 result에 sresult포함 모든 정보가 들어있음 이걸로 조작할거ㅇㅑ
 
-    print(result)    
-    return render_template('index.html')
+        #유사도 검사 성공한 애들만 모으고, 가장 추천하는 제품에 마킹 by autoReccomend
+        
+    filtered = autoRecommend(result)
+    return jsonify(filtered)    
 
 
 
