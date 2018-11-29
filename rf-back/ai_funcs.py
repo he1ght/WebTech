@@ -26,16 +26,16 @@ def autoRecommend(result, budget=0):
         for item in product['sresult']:
             item['lp'], item['hp'] = int(item['lp']), int(item['hp'])
             if item['lp'] != 0 and item['hp'] != 0:
-                item['price'] = (item['lp'] + item['hp']) / 2
+                item['price'] = int((item['lp'] + item['hp']) / 2)
             elif item['lp'] != 0:
                 item['price'] = item['lp']
             else:
                 item['price'] = item['hp']
             if not cheap_item or cheap_item['price'] > item['price']:
                 cheap_item = item
-            item['is_check'] = False
+            item['is_check'] = 0
         if cheap_item:
-            cheap_item['is_check'] = True
+            cheap_item['is_check'] = 1
             price_sum += cheap_item['price']
     return result
 
