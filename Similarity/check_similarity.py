@@ -40,8 +40,8 @@ def img_sim(input_path, target_list, threshold=0.7, use_gpu=True, prune=True):
             # print("{:10s} : {} [{}]".format(k, 'O' if v >= threshold else 'X', v))
             assert k == file['img']
             result.append({'img': k,
-                           'sim': v,
-                           'result': v >= threshold,
+                           # 'sim': v,
+                           'result': 1 if v >= threshold else 0,
                            'lp': file['lp'],
                            'hp': file['hp'],
                            'link': file['link'],
