@@ -78,7 +78,10 @@ def upload_file():
         
         iter_link = root.iter('link')
         next(iter_link)
-        for img,lp,hp,link,title in zip(root.iter('image'),root.iter('lprice'), root.iter('hprice'),iter_link, root.iter('title')):            
+        iter_title = root.iter('title')
+        next(iter_title)
+
+        for img,lp,hp,link,title in zip(root.iter('image'),root.iter('lprice'), root.iter('hprice'),iter_link, iter_title):            
             q = {}
             q["img"] = img.text
             q["lp"] = lp.text
