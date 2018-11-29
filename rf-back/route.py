@@ -75,23 +75,25 @@ def upload_file():
         lists = []
         doc = ET.parse(f"static/products{i['index']}.xml")
         root = doc.getroot()
-        for img,lp,hp,link,title  in zip(root.iter('image'),root.iter('lprice'),root.iter('hprice'),root.iter('link'), root.iter('title')):            
+        
+        iter_link = root.iter('link')
+        next(iter_link)
+        for img,lp,hp,link,title in zip(root.iter('image'),root.iter('lprice'), root.iter('hprice'),iter_link, root.iter('title')):            
             q = {}
             q["img"] = img.text
             q["lp"] = lp.text
             q["hp"] = hp.text     
-            q["link"] = link.text       
+            q["link"] = link.text                   
             q["title"] = title.text
             lists.append(q)
                     
         # image similarity check start
         sresult = img2vec(f'./static/output/{i["index"]}.jpg',lists, 0.6)  #list안에 dic img : 이미지 주소랑 result : true/false        
         result.append({'sresult': sresult, 'idx': i['index'], 'label':i['label'] }) #여기 result에 sresult포함 모든 정보가 들어있음 이걸로 조작할거ㅇㅑ
-
         #유사도 검사 성공한 애들만 모으고, 가장 추천하는 제품에 마킹 by autoReccomend
         
-    filtered = autoRecommend(result)
-    return jsonify(filtered)    
+    filtered = autoRecommend(result)    
+    return jsonify(filtered)
 
 
 
