@@ -22,7 +22,7 @@ def autoRecommend(result, budget=0):
     # todo return 값 reuslt ['is_check'] true/false 추가
     price_sum = 0
     for product in result:
-        cheap_item = None
+        best_sim_item = None
         for item in product['sresult']:
             item['lp'], item['hp'] = int(item['lp']), int(item['hp'])
             if item['lp'] != 0 and item['hp'] != 0:
@@ -31,12 +31,15 @@ def autoRecommend(result, budget=0):
                 item['price'] = item['lp']
             else:
                 item['price'] = item['hp']
-            if not cheap_item or cheap_item['price'] > item['price']:
-                cheap_item = item
+            if not best_sim_item or best_sim_item['sim'] < item['sim']:
+                best_sim_item = item
             item['is_check'] = 0
-        if cheap_item:
-            cheap_item['is_check'] = 1
-            price_sum += cheap_item['price']
+        if best_sim_item:
+            best_sim_item['is_check'] = 1
+            price_sum += best_sim_item['price']
+    for product in result:
+        for item in product['sresult']:
+            item['sim'] = 0
     return result
 
 
