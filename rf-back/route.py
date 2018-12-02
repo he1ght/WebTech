@@ -56,14 +56,12 @@ def hello_world():
 
 #예산, 이미지 제출 post
 @app.route('/', methods=['POST'])
-def upload_file():
-    for i in range(10):
-        if os.path.exists(CLASS_FOLDER+f'/{i}.jpg')
-            os.remove(CLASS_FOLDER+f'/{i}.jpg')
-        else :
-            print("not exist")
-    
-        
+def upload_file():    
+    # 파일 deletion
+    filelist = [ f for f in os.listdir(CLASS_FOLDER) if f.endswith(".jpg") ]
+    for f in filelist:
+        os.remove(os.path.join(CLASS_FOLDER), f))
+                
     file = request.files['image']        
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
