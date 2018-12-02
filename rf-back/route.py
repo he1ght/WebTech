@@ -58,8 +58,8 @@ def hello_world():
 @app.route('/', methods=['POST'])
 def upload_file():
     for i in range(10):
-        if os.path.exists(UPLOAD_FOLDER+f'{i}.jpg')
-            os.remove(UPLOAD_FOLDER+f'{i}.jpg')
+        if os.path.exists(CLASS_FOLDER+f'/{i}.jpg')
+            os.remove(CLASS_FOLDER+f'/{i}.jpg')
         else :
             print("not exist")
     
