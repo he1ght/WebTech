@@ -15,6 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = os.path.basename('uploads')
+CLASS_FOLDER= os.path.basename('static/output')
+
 BUDGET = 0
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 fileChanged = 0 # for observe file change
@@ -55,6 +57,13 @@ def hello_world():
 #예산, 이미지 제출 post
 @app.route('/', methods=['POST'])
 def upload_file():
+    for i in range(10):
+        if os.path.exists(UPLOAD_FOLDER+f'{i}.jpg')
+            os.remove(UPLOAD_FOLDER+f'{i}.jpg')
+        else :
+            print("not exist")
+    
+        
     file = request.files['image']        
     f = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded.jpg')        
     file.save(f)
@@ -96,6 +105,7 @@ def upload_file():
         #유사도 검사 성공한 애들만 모으고, 가장 추천하는 제품에 마킹 by autoReccomend
         
     filtered = autoRecommend(result)    
+
     return jsonify(filtered)
 
 
