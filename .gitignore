@@ -8,3 +8,9 @@ rf-back/static/prducts*.xml
 *.jpeg
 *.pyc
 */__pycache__
+!/capture/capture2-mainwithimage.png
+!/capture/capture5-result over budget.png
+!/capture/capture4-result1.png
+!/capture/capture3-loading.png
+!/capture/capture-6-mobile view.png
+!/capture/capture1-main.png
