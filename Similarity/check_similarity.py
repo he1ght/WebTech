@@ -9,7 +9,7 @@ import requests
 
 
 def img_sim(input_path, target_list, threshold=0.7, use_gpu=True, prune=True):
-    img2vec = Img2Vec(model='resnet-101', cuda=use_gpu)
+    img2vec = Img2Vec(model='resnet-152', cuda=use_gpu)
     try:
         key_img = Image.open(input_path)
     except OSError:

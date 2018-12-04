@@ -14,7 +14,7 @@ from utils.utils import *
 
 def detect_object(image_folder="data/samples", output="output", use_gpu=True, config_path="config/yolov3.cfg",
                   weights_path="weights/yolov3.weights", class_path="data/coco.names", conf_thres=0.8, nms_thres=0.4,
-                  batch_size=1, n_cpu=0, img_size=416):
+                  batch_size=1, n_cpu=0, img_size=416, path_id=""):
     cuda = torch.cuda.is_available() and use_gpu
 
     os.makedirs(output, exist_ok=True)
@@ -79,10 +79,10 @@ def detect_object(image_folder="data/samples", output="output", use_gpu=True, co
                 c_area = (x1.item(), y1.item(), x1.item() + box_w.item(), y1.item() + box_h.item())
                 cropped_img = img.crop(c_area)
                 try:
-                    cropped_img.save('%s/%d.jpg' % (output, img_info['index']))
+                    cropped_img.save('%s/%s%d.jpg' % (output, path_id, img_info['index']))
                 except OSError:
                     cropped_img = cropped_img.convert("RGB")
-                    cropped_img.save('%s/%d.jpg' % (output, img_info['index']))
+                    cropped_img.save('%s/%s%d.jpg' % (output, path_id, img_info['index']))
 
                 cnt += 1
                 preds.append(img_info)

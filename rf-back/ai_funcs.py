@@ -1,5 +1,19 @@
 import sys
 
+popular_label = {
+    'tvmonitor': 'monitor',
+    'diningtable': 'dining table'
+}
+fixed_label = {
+    'chair': '거실 의자',
+    'dining table': '식탁',
+    'vase': '화병',
+    'microwave': '전자레인지',
+    'sink': '싱크대',
+    'cup': '유리컵',
+    'pottedplant': '화초'
+}
+
 sys.path.insert(0, "../Classification/")
 import detector
 
@@ -7,11 +21,12 @@ sys.path.insert(0, '../Similarity/')
 import check_similarity
 
 
-def detectObj():
+def detectObj(path_id = ""):
     return detector.detect_object(image_folder="uploads/", output="static/output",
                                   config_path="../Classification/config/yolov3.cfg",
                                   weights_path="../Classification/weights/yolov3.weights",
-                                  class_path="../Classification/data/coco.names")
+                                  class_path="../Classification/data/coco.names",
+                                  path_id=path_id)
 
 
 def img2vec(input_path, target_list, threshold=0.7):
